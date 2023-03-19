@@ -160,6 +160,7 @@ function Interface:CommandReceived(command)
 		end
 	end
 
+	tracy.ZoneBeginN(cmdName)
 	if self.bufferCommandsEnabled and self:SendCommandToBuffer(cmdName) then
 		if not self.commandBuffer then
 			self.commandBuffer = {}
@@ -169,6 +170,7 @@ function Interface:CommandReceived(command)
 		self.commandsInBuffer = self.commandsInBuffer + 1
 		self.commandBuffer[self.commandsInBuffer] = command
 		self:_CallListeners("OnCommandBuffered", command)
+		tracy.ZoneEnd()
 		return
 	end
 
@@ -177,6 +179,7 @@ function Interface:CommandReceived(command)
 	end
 
 	self:_OnCommandReceived(cmdName, arguments, cmdId)
+	tracy.ZoneEnd()
 end
 
 function Interface:_GetCommandPattern(cmdName)
